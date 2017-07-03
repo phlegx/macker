@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/phlegx/#{spec.name}"
 
   spec.summary       = 'Real MAC addresses maker.'
-  spec.description   = 'Real MAC addresses generator and vendor lookup.'
+  spec.description   = 'Real MAC addresses generator and vendor lookup with MAC address handling.'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
