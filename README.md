@@ -1,11 +1,11 @@
 # Macker
 
-[![Gem Version](https://badge.fury.io/rb/redlics.svg)](https://rubygems.org/gems/macker)
+[![Gem Version](https://badge.fury.io/rb/macker.svg)](https://rubygems.org/gems/macker)
 [![Gem](https://img.shields.io/gem/dt/macker.svg?maxAge=2592000)](https://rubygems.org/gems/macker)
 [![Build Status](https://secure.travis-ci.org/phlegx/macker.svg?branch=master)](https://travis-ci.org/phlegx/macker)
 [![Code Climate](http://img.shields.io/codeclimate/github/phlegx/macker.svg)](https://codeclimate.com/github/phlegx/macker)
 [![Inline Docs](http://inch-ci.org/github/phlegx/macker.svg?branch=master)](http://inch-ci.org/github/phlegx/macker)
-[![Dependency Status](https://gemnasium.com/phlegx/redlics.svg)](https://gemnasium.com/phlegx/macker)
+[![Dependency Status](https://gemnasium.com/phlegx/macker.svg)](https://gemnasium.com/phlegx/macker)
 [![License](https://img.shields.io/github/license/phlegx/macker.svg)](http://opensource.org/licenses/MIT)
 
 Real MAC address generator and vendor lookup.
