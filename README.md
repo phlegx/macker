@@ -1,4 +1,4 @@
-# Macker
+# Macker (The Mac Maker)
 
 [![Gem Version](https://badge.fury.io/rb/macker.svg)](https://rubygems.org/gems/macker)
 [![Gem](https://img.shields.io/gem/dt/macker.svg?maxAge=2592000)](https://rubygems.org/gems/macker)
