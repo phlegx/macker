@@ -101,7 +101,7 @@ module Macker
   # @return [Address] MAC address with data
   def generate(opts = {})
     expire! if config.auto_expiration
-    return generate_by_iso_code(opts.delete(:iso_code), opts) if opts[:iso_code] && opts[:iso_code].length == 2
+    return generate_by_iso_code(opts.delete(:iso_code), opts) if opts[:iso_code]
     vendor = opts.delete(:vendor)
     case vendor
     when nil, false
@@ -257,6 +257,7 @@ module Macker
       base16_fields = vendor.strip.split("\n")[1].split("\t")
       mac_prefix = Address.new(base16_fields[0].strip[0..5]).prefix
       address = vendor.strip.delete("\t").split("\n")
+      iso_code = address[-1].strip
       next unless @prefix_table[mac_prefix].nil?
       @prefix_table[mac_prefix] = { name: base16_fields[-1]
                                       .strip
@@ -273,7 +274,7 @@ module Macker
                                       .map(&:capitalize)
                                       .join(' ')
                                     },
-                                    iso_code: address[-1].strip.upcase
+                                    iso_code: iso_code.length == 2 ? iso_code.upcase : nil
                                   }
     end
     @iso_code_table = @prefix_table.each_with_object({}) { |(key, value), out| (out[value[:iso_code]] ||= []) << value.merge(prefix: key) }

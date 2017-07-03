@@ -44,7 +44,7 @@ Rails users can create a file `macker.rb` in `config/initializers` to load the o
 
 ```ruby
 Maker.configure do |config|
-  config.oui_full_url    = 'http://standards-oui.ieee.org/oui.txt',                                # Full URL of OUI text file
+  config.oui_full_url    = 'http://linuxnet.ca/ieee/oui.txt',                                      # Full URL of OUI text file
   config.user_agent      = 'Mozilla/5.0 (X11; Linux x86_64; rv:54.0) Gecko/20100101 Firefox/54.0', # A common user agent
   config.ttl_in_seconds  = 86_400,                                                                 # Will expire the vendors in one day
   config.cache           = File.expand_path(File.dirname(__FILE__) + '/../../data/oui_*.txt'),     # Can be a string, pathname or proc
@@ -84,6 +84,9 @@ mac.to_s
 
 mac = Macker.generate(iso_code: 'US')
 # => #<Macker::Address:0x000000046b86f0 @val=161304050786, @name="The Weather Channel", @address=["Mail Stop 500", "Atlanta Ga 30339", "Us"], @iso_code="US">
+
+# Raise an exception
+Macker.generate!(iso_code: 'HELLO')
 ```
 
 ### Lookup MAC address
@@ -99,6 +102,7 @@ Macker.lookup(mac)
 Macker.lookup('64-E6-82-E5-CC-58')
 Macker.lookup('64E682E5CC58')
 Macker.lookup(110941201353816)
+Macker.lookup!(110941201353816)
 ```
 
 ### MAC address
@@ -127,6 +131,46 @@ mymac.next
 mymac.succ
 mymac.prefix
 mymac.full_address
+```
+
+### Cache control
+
+```ruby
+# Update OUI from cache (careful)
+Macker.update
+# => 2017-07-03 13:03:00 +0200
+
+# Update OUI from remote (straight)
+Macker.update(true)
+# => 2017-07-03 13:04:00 +0200
+
+# Vendor table with all base16 MAC prefixes as keys
+Macker.prefix_table
+# => "F8DA0C"=>{:name=>"Hon Hai..."},  ...
+
+# Vendor table with all country iso codes as keys
+Macker.iso_code_table
+# => "CN"=>[{:name=>"Hon Hai..."} ... ]
+
+# Vendor table with all country vendor names as keys
+Macker.vendor_table
+# => "Apple, Inc."=>[{:prefix=>...} ... ]
+
+Macker.expire!
+# => false
+
+Macker.expired?
+# => false
+
+Macker.stale?
+# => false
+
+Macker.vendors_expiration
+# => 2017-07-04 13:04:00 +0200
+
+# Get configuration of Macker
+Macker.config
+# => #<Macker::Config:0x0000000124ff30 @config=#...>>
 ```
 
 ## Contributors
