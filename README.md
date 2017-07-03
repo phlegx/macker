@@ -107,7 +107,7 @@ mymac = Macker.lookup('64-E6-82-E5-CC-58')
 mymac.class
 # => Macker::Address
 
-# Some method of the class
+# Some methods of the address class
 mymac.name
 mymac.address
 mymac.iso_code
