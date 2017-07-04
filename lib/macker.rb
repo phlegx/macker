@@ -101,7 +101,7 @@ module Macker
   # @return [Address] MAC address with data
   def generate(opts = {})
     expire! if config.auto_expiration
-    return generate_by_iso_code(opts.delete(:iso_code), opts) if opts[:iso_code]
+    return generate_by_iso_code(opts.delete(:iso_code).upcase, opts) if opts[:iso_code]
     vendor = opts.delete(:vendor)
     case vendor
     when nil, false
@@ -259,26 +259,10 @@ module Macker
       address = vendor.strip.delete("\t").split("\n")
       iso_code = address[-1].strip
       next unless @prefix_table[mac_prefix].nil?
-      @prefix_table[mac_prefix] = { name: base16_fields[-1]
-                                      .strip
-                                      .gsub(/\s+/, ' ')
-                                      .split(/ |\_|\-/)
-                                      .map(&:capitalize)
-                                      .join(' '),
-                                    address: address[2..-1].map { |a| a
-                                      .strip
-                                      .gsub(/\s+/, ' ')
-                                      .gsub(/,(?![\s])/, ', ')
-                                      .gsub(/\,+$/, '')
-                                      .split(/ |\_|\-/)
-                                      .map(&:capitalize)
-                                      .join(' ')
-                                    },
-                                    iso_code: iso_code.length == 2 ? iso_code.upcase : nil
-                                  }
+      @prefix_table[mac_prefix] = add_vendor(base16_fields, address, iso_code)
     end
-    @iso_code_table = @prefix_table.each_with_object({}) { |(key, value), out| (out[value[:iso_code]] ||= []) << value.merge(prefix: key) }
-    @vendor_table = @prefix_table.each_with_object({}) { |(key, value), out| (out[value[:name]] ||= []) << value.merge(prefix: key) }
+    @iso_code_table = hash_invert(@prefix_table, :iso_code)
+    @vendor_table = hash_invert(@prefix_table, :name)
     @prefix_table
   end
 
@@ -391,5 +375,40 @@ module Macker
     File.rename(file_path,
                 File.join(File.dirname(file_path),
                           File.basename(file_path).gsub(/_\d+\.txt/, "_#{Time.now.to_i}.txt")))
+  end
+
+  private
+
+  # Invert hash with given key to use.
+  # @param hash [Hash] source hash
+  # @param new_key [Symbol] key for the inverted hash
+  # @return [Hash] inverted hash
+  def hash_invert(hash, new_key)
+    hash.each_with_object({}) { |(key, value), out| (out[value[new_key]] ||= []) << value.merge(prefix: key) }
+  end
+
+  # Perform vendor hash
+  # @param base16_fields [Array] preifx and name field line
+  # @param address [Array] address lines
+  # @param iso_code [String] last line, iso code
+  # @return [Hash] new vendor
+  def add_vendor(base16_fields, address, iso_code)
+    { name: base16_fields[-1]
+        .strip
+        .gsub(/\s+/, ' ')
+        .split(/ |\_|\-/)
+        .map(&:capitalize)
+        .join(' '),
+      address: address[2..-1].map { |a| a
+        .strip
+        .gsub(/\s+/, ' ')
+        .gsub(/,(?![\s])/, ', ')
+        .gsub(/\,+$/, '')
+        .split(/ |\_|\-/)
+        .map(&:capitalize)
+        .join(' ')
+      },
+      iso_code: iso_code.length == 2 ? iso_code.upcase : nil
+    }
   end
 end

@@ -30,7 +30,7 @@ module Macker
       else
         raise(InvalidAddress, "Incompatible type for address initialization: #{mac.class}")
       end
-      raise(InvalidAddress, "Invalid MAC address: #{self.to_s}") unless valid?
+      raise(InvalidAddress, "Invalid MAC address: #{self}") unless valid?
       @name     ||= opts.fetch(:name, nil)
       @address  ||= opts.fetch(:address, nil)
       @iso_code ||= opts.fetch(:iso_code, nil)
