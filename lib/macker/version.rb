@@ -3,5 +3,5 @@
 # Macker namespace
 module Macker
   # Macker version
-  VERSION = '0.1.2'.freeze
+  VERSION = '0.1.3'.freeze
 end

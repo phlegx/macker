@@ -396,17 +396,13 @@ module Macker
     { name: base16_fields[-1]
         .strip
         .gsub(/\s+/, ' ')
-        .split(/ |\_|\-/)
-        .map(&:capitalize)
-        .join(' '),
+        .sub(/^./, &:upcase),
       address: address[2..-1].map { |a| a
         .strip
         .gsub(/\s+/, ' ')
         .gsub(/,(?![\s])/, ', ')
         .gsub(/\,+$/, '')
-        .split(/ |\_|\-/)
-        .map(&:capitalize)
-        .join(' ')
+        .sub(/^./, &:upcase)
       },
       iso_code: iso_code.length == 2 ? iso_code.upcase : nil
     }
