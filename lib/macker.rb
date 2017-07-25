@@ -334,7 +334,7 @@ module Macker
   # Get remote content and store in cache
   # @return [String] text content
   def read_from_url
-    text = open_url
+    text = open_url.force_encoding(Encoding::UTF_8)
     store_in_cache(text) if text && config.cache
     text
   end
@@ -396,12 +396,14 @@ module Macker
     { name: base16_fields[-1]
         .strip
         .gsub(/\s+/, ' ')
+        .gsub(/[,;](?![\s])/, ', ')
+        .gsub(/[,;]+$/, '')
         .sub(/^./, &:upcase),
       address: address[2..-1].map { |a| a
         .strip
         .gsub(/\s+/, ' ')
-        .gsub(/,(?![\s])/, ', ')
-        .gsub(/\,+$/, '')
+        .gsub(/[,;](?![\s])/, ', ')
+        .gsub(/[,;]+$/, '')
         .sub(/^./, &:upcase)
       },
       iso_code: iso_code.length == 2 ? iso_code.upcase : nil
