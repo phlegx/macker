@@ -66,7 +66,7 @@ module Macker
   # @param opts [Hash] options for the method
   # @return [Address] MAC address with vendor data
   def lookup(mac, opts = {})
-    expire! if config.auto_expiration
+    lapsed!
     data = prefix_table[Address.new(mac).prefix]
     if data.nil?
       opts[:raising] ? raise(NotFoundOuiVendor, "OUI not found for MAC: #{mac}") : (return nil)
@@ -100,7 +100,7 @@ module Macker
   # @param opts [Hash] options for the method
   # @return [Address] MAC address with data
   def generate(opts = {})
-    expire! if config.auto_expiration
+    lapsed!
     return generate_by_iso_code(opts.delete(:iso_code).upcase, opts) if opts[:iso_code]
     vendor = opts.delete(:vendor)
     case vendor
@@ -153,13 +153,35 @@ module Macker
     @vendor_table
   end
 
-  # Fetch new vendor list if cached list is expired or stale
+  # Fetch new vendor list if cached list is lapsed (expired or stale)
+  # @return [Boolean] true if vendor list is lapsed and updated
+  def lapsed!
+    if config.auto_expire && expired?
+      update(true)
+      true
+    elsif config.auto_stale && stale?
+      update
+      true
+    else
+      false
+    end
+  end
+
+  # Fetch new vendor list if cached list is expired
   # @return [Boolean] true if vendor list is expired and updated from remote
   def expire!
     if expired?
       update(true)
       true
-    elsif stale?
+    else
+      false
+    end
+  end
+
+  # Fetch new vendor list if cached list is stale
+  # @return [Boolean] true if vendor list is stale and updated from cache
+  def stale!
+    if stale?
       update
       true
     else
