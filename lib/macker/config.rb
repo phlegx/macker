@@ -16,7 +16,9 @@ module Macker
         # Can be a string, pathname or proc
         cache:           File.expand_path(File.dirname(__FILE__) + '/../../data/oui_*.txt'),
         # Expiration can be checked manually
-        auto_expiration: true
+        auto_expire:     true,
+        # Stale can be checked manually
+        auto_stale:      true
       )
     end
 
